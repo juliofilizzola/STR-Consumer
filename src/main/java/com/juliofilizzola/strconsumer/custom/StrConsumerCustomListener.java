@@ -2,14 +2,16 @@ package com.juliofilizzola.strconsumer.custom;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@MessageMapping
 @KafkaListener
 public @interface StrConsumerCustomListener {
   @AliasFor(annotation = KafkaListener.class, attribute = "topics")
@@ -19,5 +21,9 @@ public @interface StrConsumerCustomListener {
   String containerFactory() default "concurrentKafkaListenerContainerFactory";
 
   @AliasFor(annotation = KafkaListener.class, attribute = "groupÍd")
-  String groupId();
+  String groupId() default "";
+
+  @AliasFor(annotation = KafkaListener.class, attribute = "errorHandler")
+  String errorHandler() default "errorCustomHandler";
+
 }
